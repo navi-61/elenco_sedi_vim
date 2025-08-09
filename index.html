@@ -156,7 +156,7 @@ function populateFilters() {
   });
 }
 
-function filterRows() {
+/* function filterRows() {
   const cityVal = document.getElementById('cityFilter').value.trim().toLowerCase();
   const serviceVal = document.getElementById('serviceFilter').value.trim().toLowerCase();
   const presidioVal = document.getElementById('presidioFilter').value.trim().toLowerCase();
@@ -176,7 +176,29 @@ function filterRows() {
 
     return matchesFilter && matchesSearch;
   });
+}*/
+  function filterRows() {
+  const cityVal = document.getElementById('cityFilter').value.trim().toLowerCase();
+  const serviceVal = document.getElementById('serviceFilter').value.trim().toLowerCase();
+  const presidioVal = document.getElementById('presidioFilter').value.trim().toLowerCase();
+  const searchTerm = document.getElementById('searchBox').value.trim().toLowerCase();
+
+  return rows.filter(row => {
+    // Controlla filtri dropdown
+    if (cityVal && !row.citta.toLowerCase().includes(cityVal)) return false;
+    if (serviceVal && !row.servizio.toLowerCase().includes(serviceVal)) return false;
+    if (presidioVal && !row.presidio.toLowerCase().includes(presidioVal)) return false;
+
+    // Controlla ricerca libera su TUTTI i campi
+    if (searchTerm) {
+      const haystack = Object.values(row).join(' ').toLowerCase();
+      return haystack.includes(searchTerm);
+    }
+
+    return true;
+  });
 }
+
 
 function renderTable() {
   tbody.innerHTML = '';
@@ -316,3 +338,4 @@ loadCSV();
 </script>
 </body>
 </html>
+
