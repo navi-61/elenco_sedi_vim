@@ -212,7 +212,6 @@ function renderTable() {
     if (emailRaw.includes('@')) {
       emailHtml = highlightMatch(escapeHtml(emailRaw), searchTerms);
     } else if (!emailRaw && tooltipEmail) {
-      // Tooltip con testo semplice senza highlight per non rompere hover
       emailHtml = `<div class="tooltip">${escapeHtml(row.presidio || '')}
         <span class="tooltiptext">${escapeHtml(tooltipEmail)}</span></div>`;
     } else if (emailMap[emailRaw.toUpperCase()]) {
@@ -226,10 +225,16 @@ function renderTable() {
     tr.innerHTML = `
       <td>${highlightMatch(escapeHtml(row.citta || ''), searchTerms)}</td>
       <td>${highlightMatch(escapeHtml(row.indirizzo || ''), searchTerms)}</td>
-      <td>${highlightMatch(escapeHtml(row.servizio || ''), searchTerms)}</td>
+      <td><div class="tooltip">
+        ${highlightMatch(escapeHtml(row.servizio || ''), searchTerms)}
+        <span class="tooltiptext">${escapeHtml(row.servizio || '')}</span>
+      </div></td>
       <td>${emailHtml}</td>
       <td>${highlightMatch(escapeHtml(row.presidio || ''), searchTerms)}</td>
-      <td>${highlightMatch(escapeHtml(row.note || ''), searchTerms)}</td>
+      <td><div class="tooltip">
+        ${highlightMatch(escapeHtml(row.note || ''), searchTerms)}
+        <span class="tooltiptext">${escapeHtml(row.note || '')}</span>
+      </div></td>
     `;
     tbody.appendChild(tr);
   }
@@ -310,3 +315,4 @@ loadCSV();
 </script>
 </body>
 </html>
+
