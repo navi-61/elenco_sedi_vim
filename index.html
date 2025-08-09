@@ -211,8 +211,13 @@ function renderTable() {
   if (currentSortIndex !== null) {
     const keys = ['citta', 'indirizzo', 'servizio', 'email', 'presidio', 'note'];
     const key = keys[currentSortIndex];
-     filtered.sort((a, b) => {
+     // filtered.sort((a, b) => {
     //  filtered.sort((a, b) => a.citta.localeCompare(b.citta));
+    filtered.sort((a, b) => {
+      const aCitta = (a.citta || '').toLowerCase();
+      const bCitta = (b.citta || '').toLowerCase();
+      return aCitta.localeCompare(bCitta);
+    });
       let valA = (a[key] || '').toLowerCase();
       let valB = (b[key] || '').toLowerCase();
       if (valA < valB) return sortAsc ? -1 : 1;
@@ -339,6 +344,7 @@ loadCSV();
 </script>
 </body>
 </html>
+
 
 
 
