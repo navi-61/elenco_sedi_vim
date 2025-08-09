@@ -12,7 +12,7 @@
   .dark-mode .tooltip .tooltiptext { background-color: #333; color: #eee; border: 1px solid #555; }
   table { width: 100%; border-collapse: collapse; margin-top: 10px; }
   th, td { font-size: 14px; padding: 6px 10px; border: 1px solid #ccc; text-align: left; }
-  th { cursor: pointer; background-color: #f2f2f2; }
+  th { cursor: pointer; background-color: #f2f2f2; user-select:none; }
   .tooltip { position: relative; display: inline-block; cursor: help; }
   .tooltip .tooltiptext {
     visibility: hidden; width: max-content; max-width: 300px; background-color: #fff8c4; color: #333;
@@ -24,7 +24,7 @@
   button, select { font-size: 12px; padding: 8px; }
   .pagination { margin-top: 10px; }
   .pagination button { margin-right: 5px; padding: 5px 10px; }
-  mark, .highlight { background: yellow; color: black; }
+  mark, mark span { background: yellow; color: black; }
 </style>
 </head>
 <body>
@@ -45,12 +45,12 @@
 <table id="dataTable">
   <thead>
     <tr>
-      <th onclick="sortTable(0)">Città</th>
-      <th onclick="sortTable(1)">Indirizzo</th>
-      <th onclick="sortTable(2)">Servizio ASST</th>
-      <th onclick="sortTable(3)">Email SIA</th>
-      <th onclick="sortTable(4)">Presidio Fleet</th>
-      <th onclick="sortTable(5)">Note</th>
+      <th>Città</th>
+      <th>Indirizzo</th>
+      <th>Servizio ASST</th>
+      <th>Email SIA</th>
+      <th>Presidio Fleet</th>
+      <th>Note</th>
     </tr>
   </thead>
   <tbody></tbody>
@@ -62,8 +62,8 @@
 let rows = [];
 const pageSize = 20;
 let currentPage = 1;
-let sortAsc = true;
 let currentSortIndex = null;
+let sortAsc = true;
 
 const tbody = document.querySelector('#dataTable tbody');
 const pagination = document.getElementById('pagination');
@@ -83,11 +83,11 @@ function escapeHtml(str) {
 }
 
 function highlightMatch(text, searchTerms) {
-  let result = text;
+  let result = escapeHtml(text || '');
   searchTerms.forEach(term => {
     if (term) {
-      const regex = new RegExp(`(${term.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
-      result = result.replace(regex, '<span class="highlight">$1</span>');
+      const regex = new RegExp(`(${term})`, 'gi');
+      result = result.replace(regex, '<mark>$1</mark>');
     }
   });
   return result;
@@ -96,12 +96,12 @@ function highlightMatch(text, searchTerms) {
 async function loadCSV() {
   try {
     const response = await fetch('dati.csv');
-    if(!response.ok) throw new Error('Errore caricamento CSV: ' + response.statusText);
+    if (!response.ok) throw new Error('Errore caricamento CSV: ' + response.statusText);
     const text = await response.text();
     parseCSV(text);
     populateFilters();
     renderTable();
-  } catch(err) {
+  } catch (err) {
     alert(err.message);
   }
 }
@@ -140,14 +140,12 @@ function populateFilters() {
     option.textContent = value;
     cityFilter.appendChild(option);
   });
-
   services.forEach(value => {
     const option = document.createElement('option');
     option.value = value;
     option.textContent = value;
     serviceFilter.appendChild(option);
   });
-
   presidi.forEach(value => {
     const option = document.createElement('option');
     option.value = value;
@@ -156,71 +154,39 @@ function populateFilters() {
   });
 }
 
-/* function filterRows() {
+function filterRows() {
   const cityVal = document.getElementById('cityFilter').value.trim().toLowerCase();
   const serviceVal = document.getElementById('serviceFilter').value.trim().toLowerCase();
   const presidioVal = document.getElementById('presidioFilter').value.trim().toLowerCase();
   const searchTerm = document.getElementById('searchBox').value.trim().toLowerCase();
 
   return rows.filter(row => {
-    const citta = (row.citta || '').toLowerCase();
-    const servizio = (row.servizio || '').toLowerCase();
-    const presidio = (row.presidio || '').toLowerCase();
-
-    const matchesFilter = 
-      (!cityVal || citta.includes(cityVal)) &&
-      (!serviceVal || servizio.includes(serviceVal)) &&
-      (!presidioVal || presidio.includes(presidioVal));
-
-    const matchesSearch = !searchTerm || Object.values(row).some(v => (v || '').toLowerCase().includes(searchTerm));
-
-    return matchesFilter && matchesSearch;
-  });
-}*/
-  function filterRows() {
-  const cityVal = document.getElementById('cityFilter').value.trim().toLowerCase();
-  const serviceVal = document.getElementById('serviceFilter').value.trim().toLowerCase();
-  const presidioVal = document.getElementById('presidioFilter').value.trim().toLowerCase();
-  const searchTerm = document.getElementById('searchBox').value.trim().toLowerCase();
-
-  return rows.filter(row => {
-    // Controlla filtri dropdown
     if (cityVal && !row.citta.toLowerCase().includes(cityVal)) return false;
     if (serviceVal && !row.servizio.toLowerCase().includes(serviceVal)) return false;
     if (presidioVal && !row.presidio.toLowerCase().includes(presidioVal)) return false;
 
-    // Controlla ricerca libera su TUTTI i campi
     if (searchTerm) {
       const haystack = Object.values(row).join(' ').toLowerCase();
       return haystack.includes(searchTerm);
     }
-
     return true;
   });
 }
 
-
-/*function renderTable() {
-  tbody.innerHTML = '';
-
+function renderTable() {
   const searchValue = document.getElementById('searchBox').value.toLowerCase().trim();
   const searchTerms = searchValue.split(/\s+/).filter(term => term);
 
   let filtered = filterRows();
 
+  // Ordinamento dinamico se selezionato
   if (currentSortIndex !== null) {
-    const keys = ['citta', 'indirizzo', 'servizio', 'email', 'presidio', 'note'];
-    const key = keys[currentSortIndex];
-     // filtered.sort((a, b) => {
-    //  filtered.sort((a, b) => a.citta.localeCompare(b.citta));
-    /* filtered.sort((a, b) => {
-      const aCitta = (a.citta || '').toLowerCase();
-      const bCitta = (b.citta || '').toLowerCase();
-      return aCitta.localeCompare(bCitta);
-    });
-    /*
-      let valA = (a[key] || '').toLowerCase();
-      let valB = (b[key] || '').toLowerCase();
+    filtered.sort((a, b) => {
+      const columns = ['citta', 'indirizzo', 'servizio', 'email', 'presidio', 'note'];
+      const key = columns[currentSortIndex];
+      const valA = (a[key] || '').toLowerCase();
+      const valB = (b[key] || '').toLowerCase();
+
       if (valA < valB) return sortAsc ? -1 : 1;
       if (valA > valB) return sortAsc ? 1 : -1;
       return 0;
@@ -233,70 +199,6 @@ function populateFilters() {
   const start = (currentPage - 1) * pageSize;
   const pageRows = filtered.slice(start, start + pageSize);
 
-  if (pageRows.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nessun risultato</td></tr>';
-    pagination.innerHTML = '';
-    return;
-  }
-
-  for (const row of pageRows) {
-    const presidioUpper = row.presidio.toUpperCase();
-    const tooltipEmail = emailMap[presidioUpper] || '';
-    const emailRaw = row.email.trim();
-    let emailHtml = '';
-
-    if (emailRaw.includes('@')) {
-      emailHtml = highlightMatch(escapeHtml(emailRaw), searchTerms);
-    } else if (!emailRaw && tooltipEmail) {
-      emailHtml = `<div class="tooltip">${escapeHtml(row.presidio || '')}
-        <span class="tooltiptext">${escapeHtml(tooltipEmail)}</span></div>`;
-    } else if (emailMap[emailRaw.toUpperCase()]) {
-      emailHtml = `<div class="tooltip">${escapeHtml(emailRaw || '')}
-        <span class="tooltiptext">${escapeHtml(emailMap[emailRaw.toUpperCase()])}</span></div>`;
-    } else {
-      emailHtml = highlightMatch(escapeHtml(emailRaw), searchTerms);
-    }
-
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${highlightMatch(escapeHtml(row.citta || ''), searchTerms)}</td>
-      <td>${highlightMatch(escapeHtml(row.indirizzo || ''), searchTerms)}</td>
-      <td><div class="tooltip">${highlightMatch(escapeHtml(row.servizio || ''), searchTerms)}
-        <span class="tooltiptext">${escapeHtml(row.servizio || '')}</span></div></td>
-      <td>${emailHtml}</td>
-      <td>${highlightMatch(escapeHtml(row.presidio || ''), searchTerms)}</td>
-      <td><div class="tooltip">${highlightMatch(escapeHtml(row.note || ''), searchTerms)}
-        <span class="tooltiptext">${escapeHtml(row.note || '')}</span></div></td>
-    `;
-    tbody.appendChild(tr);
-  }
-
-  renderPagination(totalPages);
-}*/
-
-  function renderTable() {
-  const tbody = document.querySelector('#dataTable tbody');
-  const searchValue = document.getElementById('searchBox').value.toLowerCase().trim();
-  const searchTerms = searchValue.split(/\s+/).filter(term => term); // separa in parole
-
-  // Filtra righe con i filtri e ricerca
-  let filtered = filterRows();
-
-  // Ordina per citta in modo sicuro
-  filtered.sort((a, b) => {
-    const aCitta = (a.citta || '').toLowerCase();
-    const bCitta = (b.citta || '').toLowerCase();
-    return aCitta.localeCompare(bCitta);
-  });
-
-  // Calcola pagine
-  const totalPages = Math.ceil(filtered.length / pageSize);
-  if (currentPage > totalPages) currentPage = totalPages || 1;
-
-  // Sottoseleziona dati da mostrare in pagina
-  const start = (currentPage - 1) * pageSize;
-  const pageRows = filtered.slice(start, start + pageSize);
-
   tbody.innerHTML = '';
 
   if (pageRows.length === 0) {
@@ -305,19 +207,6 @@ function populateFilters() {
     return;
   }
 
-  // Funzione per evidenziare testo ricercato
-  function highlightMatch(text, searchTerms) {
-    let result = escapeHtml(text || '');
-    searchTerms.forEach(term => {
-      if (term) {
-        const regex = new RegExp(`(${term})`, 'gi');
-        result = result.replace(regex, '<mark>$1</mark>');
-      }
-    });
-    return result;
-  }
-
-  // Render righe
   for (const row of pageRows) {
     const presidioUpper = (row.presidio || '').toUpperCase();
     const tooltipEmail = emailMap[presidioUpper] || '';
@@ -351,18 +240,20 @@ function populateFilters() {
     tbody.appendChild(tr);
   }
 
-  // Render paginazione
   renderPagination(totalPages);
 }
 
 function renderPagination(totalPages) {
   pagination.innerHTML = '';
-  if(totalPages <= 1) return;
-  for(let i=1; i <= totalPages; i++) {
+  if (totalPages <= 1) return;
+  for (let i = 1; i <= totalPages; i++) {
     const btn = document.createElement('button');
     btn.textContent = i;
-    if(i === currentPage) btn.disabled = true;
-    btn.addEventListener('click', () => { currentPage = i; renderTable(); });
+    if (i === currentPage) btn.disabled = true;
+    btn.addEventListener('click', () => {
+      currentPage = i;
+      renderTable();
+    });
     pagination.appendChild(btn);
   }
 }
@@ -383,8 +274,13 @@ function resetFilters() {
 }
 
 function sortTable(index) {
-  if(currentSortIndex === index) sortAsc = !sortAsc;
-  else { currentSortIndex = index; sortAsc = true; }
+  if (currentSortIndex === index) {
+    sortAsc = !sortAsc;
+  } else {
+    currentSortIndex = index;
+    sortAsc = true;
+  }
+  currentPage = 1;
   renderTable();
 }
 
@@ -395,7 +291,10 @@ function generatePDF() {
   doc.text("Elenco Sedi", 14, 15);
 
   const filtered = filterRows();
-  if(filtered.length === 0) { alert("Nessun dato da esportare."); return; }
+  if (filtered.length === 0) {
+    alert("Nessun dato da esportare.");
+    return;
+  }
 
   const headers = ["Città", "Indirizzo", "Servizio ASST", "Email", "Presidio Fleet", "Note"];
   const pdfData = filtered.map(row => {
@@ -417,17 +316,41 @@ function toggleDarkMode() {
   document.body.classList.toggle('dark-mode');
 }
 
-document.getElementById('searchBox').addEventListener('input', () => { currentPage = 1; renderTable(); });
-document.getElementById('cityFilter').addEventListener('change', () => { currentPage = 1; renderTable(); });
-document.getElementById('serviceFilter').addEventListener('change', () => { currentPage = 1; renderTable(); });
-document.getElementById('presidioFilter').addEventListener('change', () => { currentPage = 1; renderTable(); });
+// Event listeners
+document.getElementById('searchBox').addEventListener('input', () => {
+  currentPage = 1;
+  renderTable();
+});
+document.getElementById('cityFilter').addEventListener('change', () => {
+  currentPage = 1;
+  renderTable();
+});
+document.getElementById('serviceFilter').addEventListener('change', () => {
+  currentPage = 1;
+  renderTable();
+});
+document.getElementById('presidioFilter').addEventListener('change', () => {
+  currentPage = 1;
+  renderTable();
+});
 
+// Listener ordinamento sulle intestazioni colonne
+document.querySelectorAll('#dataTable th').forEach((th, index) => {
+  th.style.cursor = 'pointer';
+  th.addEventListener('click', () => {
+    if (currentSortIndex === index) {
+      sortAsc = !sortAsc;
+    } else {
+      currentSortIndex = index;
+      sortAsc = true;
+    }
+    currentPage = 1;
+    renderTable();
+  });
+});
+
+// Carica dati
 loadCSV();
 </script>
 </body>
 </html>
-
-
-
-
-
