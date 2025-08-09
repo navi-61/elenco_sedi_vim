@@ -308,4 +308,11 @@ function toggleDarkMode() {
 }
 
 document.getElementById('searchBox').addEventListener('input', () => { currentPage = 1; renderTable(); });
-document.get
+document.getElementById('cityFilter').addEventListener('change', () => { currentPage = 1; renderTable(); });
+document.getElementById('serviceFilter').addEventListener('change', () => { currentPage = 1; renderTable(); });
+document.getElementById('presidioFilter').addEventListener('change', () => { currentPage = 1; renderTable(); });
+
+loadCSV();
+</script>
+</body>
+</html>
