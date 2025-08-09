@@ -1,6 +1,110 @@
-Città;Indirizzo;Servizio ASST;Email;Presidio Fleet;Note
-Milano;Via Roma 1;ASST Nord;email1@asst.it;Presidio 1;Nota 1
-Bergamo;Via Verdi 10;ASST Est;email2@asst.it;Presidio 2;Nota 2
-Como;Piazza Duomo;ASST Lago;email3@asst.it;Presidio 3;Nota 3
-Pavia;Corso Cavour 5;ASST Sud;email4@asst.it;Presidio 4;Nota 4
-Brescia;Via Vittoria 22;ASST Centro;email5@asst.it;Presidio 5;Nota 5
+Città;Indirizzo;Servizio;Email;Presidio;Note
+Besana in Brianza;Via Alessandro Manzoni;...;carate;Carate;
+Besana in Brianza;Via Viarana;...;carate;Carate;
+Besana in Brianza;Via Alessandro Manzoni;...;carate;Carate;
+Carate;Via Mosè Bianchi;Presidio Ospedaliero;carate;Carate;
+Carate;Via Mascherpa;Scelta e Revoca - CV - ADI;carate;Carate;
+Carate;Via Doninzetti;CPS;carate;Carate;
+Carate;Via Mascherpa;...;carate;Carate;
+Carate;Via Doninzetti;...;carate;Carate;
+Concorezzo;Via Sergio de Giorgi;...;carate;Carate;
+Giussano;Via Milano;Presidio Ospedaliero;carate;Carate;
+Giussano;Via Milano;Casa di Comunità;carate;Carate;
+Giussano;Via Milano;AMT Ambulatorio Medico Temporaneo;carate;Carate;
+Lazzate;Largo Martiri delle foibe;AMT Ambulatorio Medico Temporaneo;carate;Carate;Presso sede Avis
+Lentate sul Seveso;Via Garibaldi;...;carate;Carate;
+Lentate sul Seveso;Via Garibaldi;...;carate;Carate;
+Lissone;Via Monsignor Bernasconi;...;carate;Carate;ICS Maugeri Ente Privato NON afferente alla ASST BRIANZA
+Lissone;Via Don Giovanni Minzoni;...;carate;Carate;
+Lissone;Via Alberto da Giussano;...;carate;Carate;
+Lissone;Via Don Giovanni Minzoni;...;carate;Carate;
+Lissone;Via Alberto da Giussano;...;carate;Carate;
+Macherio;Via Italia;Poliambulatorio;carate;Carate;
+Meda;Via Roma;Consultorio familiare;carate;Carate;
+Meda;Via Generale Enrico Cialdini;CPA CdC;carate;Carate;
+Misinto;Via Padovan;...;carate;Carate;
+Seregno;Via Verdi;Presidio Ospedaliero;carate;Carate;
+Seregno;Via Stefano da Seregno;...;carate;Carate;
+Seregno;Via Vincenzo Bellini;...;carate;Carate;
+Seregno;Via Ivo Oliveti;...;carate;Carate;
+Seveso;Via Martiri d'Ungheria;UONPIA;carate;Carate;
+Seveso;Via Martiri d'Ungheria;AMT Ambulatorio Medico Temporaneo;carate;Carate;
+Sovico;Piazza Frette;Centro Prelievi;carate;Carate;
+Vedano al Lambro;Via Milano;CUP;carate;Carate;
+Agrate Brianza;Via Lecco;Dialisi - Casa Comunità;vimercate;Carate;
+Arcore;Via Umberto I°;Poliambulatori;vimercate;Carate;
+Arcore;Via Galileo Galilei;AMT Ambulatorio Medico Temporaneo;vimercate;Carate;
+Bellusco;Piazza Alessandro Fumagalli;Vaccinazioni;vimercate;Carate;
+Bellusco;Via Roma;...;vimercate;Carate;
+Bellusco;Via Corte dei Frati;Punto prelievi;vimercate;Carate;
+Bernareggio;Via Camillo Cavour;...;vimercate;Carate;
+Brugherio;Viale Lombardia;TUTTI NO Uonpia e Consultorio;vimercate;Carate;
+Brugherio;Viale Lombardia;AMT Ambulatorio Medico Temporaneo;vimercate;Carate;
+Burago Molgora;Piazza Matteotti;AMT Ambulatorio Medico Temporaneo;vimercate;Carate;
+Caponago;Via Roma;CUP / Punto prelievi;vimercate;Carate;
+Cavenago;Via Aprile 10;Punto prelievi;vimercate;Carate;
+Concorezzo;Via Santa Marta;Consultorio;vimercate;Carate;
+Concorezzo;Via Sergio de Giorgi;CA Continuità Assistenziale;vimercate;Carate;Ex Guardia Medica
+Concorezzo;Via De Giorgi;AMT Ambulatorio Medico Temporaneo;vimercate;Carate;
+Mezzago;Via Fratelli Brasca;AMT Ambulatorio Medico Temporaneo;vimercate;Carate;
+Monza;Ospedale Vecchio Via Solferino;TUTTI NO Uonpia e Consultorio;vimercate;Carate;ATTENZIONE! AGO è una associazione di volontariato ereditata da HSG monza il personale NON è della ASST BRIANZA accede ai PC in locale NON ha account di dominio e mail aziendale ASST Brianza
+Monza;Via Solferino;TUTTI + AMT;vimercate;Carate;"detto ""Ospedale Vecchio"" NO Uonpia e Consultorio"
+Monza;Via Boito;TUTTI;vimercate;Carate;NO Uonpia e Consultorio
+Monza;Via De Amicis;TUTTI NO Uonpia e Consultorio;vimercate;Carate;
+Monza;Casa Circondariale;TUTTI;vimercate;Carate;2 PDL IRCCS HSG: NC131211 - CMSAN006X
+Monza;Viale Elvezia;Cure Primarie;vimercate;Carate;ex ATS Brianza
+Ruginello;Via Generale Armando Diaz  /A;Consultorio;vimercate;Carate;
+Usmate Velate;Via Roma;Uonpia, Vaccinazioni, Poli Ambulatorio;vimercate;Carate;
+Vimercate;Via Ronchi;NOA;vimercate;Carate;
+Vimercate;Viale Risorgimento;Dentisti;vimercate;Carate;
+Vimercate;Piazzale Guglielmo Marconi;...;vimercate;Carate;
+Vimercate;Piazzale Guglielmo Marconi;Protesica;vimercate;Carate;
+Vimercate;Via Cesare Battisti;CPS;vimercate;Carate;
+Vimercate;via Giuditta Brambilla;Casa di Comunità - Poli Ambulatorio - S/R;vimercate;Carate;
+Vimercate;via Giuditta Brambilla;AMT Ambulatorio Medico Temporaneo + CA Continuità Assistenziale;vimercate;Carate;
+Bovisio Masciago;Piazza Montessori;Distretto;desio;Desio;
+Bovisio Masciago;Via Cantù;UONPIA;desio;Desio;
+Ceriano Laghetto;Via Cadorna;AMT Ambulatorio Medico Temporaneo;desio;Desio;
+Cesano Maderno;Via Mercantini;CAL;desio;Desio;
+Cesano Maderno;Via Santo Stefano;CSP;desio;Desio;
+Cesano Maderno;Via S.Carlo Borromeo;Distretto;desio;Desio;
+Cesano Maderno;Via S.Carlo Borromeo;Scelta Revoca;desio;Desio;
+Desio;Via Ugo Foscolo;Distretto;desio;Desio;
+Desio;Via Tolstoj;scuola di via Tolstoj;desio;Desio;
+Desio;Via Gabellini;Gabellini 10;desio;Desio;
+Limbiate;Via Monte Grappa;...;desio;Desio;
+Limbiate;Via Monte Grappa;AMT Ambulatorio Medico Temporaneo;desio;Desio;
+Limbiate;Via Monte Grappa;RSD Beato Papa Giovanni III;desio;Desio;
+Muggiò;Via Dante;Distretto;desio;Desio;
+Muggiò;Via Dante;NPI;desio;Desio;
+Nova Milanese;Via Madonnina;Distretto;desio;Desio;
+Nova Milanese;Via Croce Rossa;AMT Ambulatorio Medico Temporaneo;desio;Desio;
+Nova Milanese;Via Giussani,;CdC;desio;Desio;
+Desio;Via Giuseppe Mazzini;Presidio Ospedaliero;desio;Desio;PO PIO XI
+Varedo;Via Dante;Ambulatorio;desio;Desio;
+Varedo;Via San Giuseppe;AMT Ambulatorio Medico Temporaneo;desio;Desio;
+Varedo;Via San Giuseppe;UONPIA;desio;Desio;
+Villasanta;...;SOLO consultorio;vimercate;Carate;Riferire a Fleet Monza
+Monza;Via Giordano;Centro diurno psichiatrico;irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Monza;Via Boito;SOLO consultorio;vimercate;Carate;...
+Monza;Via De Amicis;SOLO Consultorio;vimercate;Carate;...
+Monza;Via Giordano;CDI;irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Monza;Via Giordano;CDI Adulto;irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Monza;Via De Amicis;SOLO Consultorio;vimercate;Carate;...
+Monza;Via De Amicis;Consultorio giovani adulti;irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Monza;Via Boito;Centro Prelievi;irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Monza;Via De Amicis;Centro prelievi;irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Monza;Via Giordano;Centro diurno;irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Monza;Via Boito;Consultorio giovani adulti;irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Monza;Via Boito;Centro prelievi;irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Monza;Via Giordano;Centro prelievi;irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Monza;Via Boito;Centro prelievi;irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Monza;Via Giordano;Consultorio-CPS-Neuropsichiatria infantile-Psichiatria;irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Lissone;...;Dialisi;irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Cologno Monzese;...;Centro prelievi ( AVIS );irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Besana in Brianza;...;Centro prelievi ( AVIS );irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+Desio;Via Gabellini;RSD Lo Scarabocchio;irccs monza;IRCCS MONZA;Riferire a Fleet Monza
+
+
+
+
