@@ -157,16 +157,23 @@ function populateFilters() {
 }
 
 function filterRows() {
-  const cityVal = document.getElementById('cityFilter').value;
-  const serviceVal = document.getElementById('serviceFilter').value;
-  const presidioVal = document.getElementById('presidioFilter').value;
+  const cityVal = document.getElementById('cityFilter').value.trim().toLowerCase();
+  const serviceVal = document.getElementById('serviceFilter').value.trim().toLowerCase();
+  const presidioVal = document.getElementById('presidioFilter').value.trim().toLowerCase();
   const searchTerm = document.getElementById('searchBox').value.trim().toLowerCase();
 
   return rows.filter(row => {
-    const matchesFilter = (!cityVal || row.citta === cityVal) &&
-                          (!serviceVal || row.servizio === serviceVal) &&
-                          (!presidioVal || row.presidio === presidioVal);
+    const citta = (row.citta || '').toLowerCase();
+    const servizio = (row.servizio || '').toLowerCase();
+    const presidio = (row.presidio || '').toLowerCase();
+
+    const matchesFilter = 
+      (!cityVal || citta.includes(cityVal)) &&
+      (!serviceVal || servizio.includes(serviceVal)) &&
+      (!presidioVal || presidio.includes(presidioVal));
+
     const matchesSearch = !searchTerm || Object.values(row).some(v => (v || '').toLowerCase().includes(searchTerm));
+
     return matchesFilter && matchesSearch;
   });
 }
@@ -311,3 +318,4 @@ loadCSV();
 </script>
 </body>
 </html>
+
