@@ -62,7 +62,7 @@
 let rows = [];
 const pageSize = 20;
 let currentPage = 1;
-let currentSortIndex = null;
+let currentSortIndex = 0;  // Ordina per "Città" di default
 let sortAsc = true;
 
 const tbody = document.querySelector('#dataTable tbody');
@@ -96,8 +96,6 @@ function highlightMatch(text, searchTerms) {
 async function loadCSV() {
   try {
     const response = await fetch('dati.csv');
-    let currentSortIndex = 0; 
-    let sortAsc = true;
     if (!response.ok) throw new Error('Errore caricamento CSV: ' + response.statusText);
     const text = await response.text();
     parseCSV(text);
@@ -181,7 +179,6 @@ function renderTable() {
 
   let filtered = filterRows();
 
-  // Ordinamento dinamico se selezionato
   if (currentSortIndex !== null) {
     filtered.sort((a, b) => {
       const columns = ['citta', 'indirizzo', 'servizio', 'email', 'presidio', 'note'];
@@ -270,19 +267,8 @@ function resetFilters() {
   document.getElementById('serviceFilter').value = '';
   document.getElementById('presidioFilter').value = '';
   currentPage = 1;
-  currentSortIndex = null;
+  currentSortIndex = 0; // Ripristina ordinamento città crescente
   sortAsc = true;
-  renderTable();
-}
-
-function sortTable(index) {
-  if (currentSortIndex === index) {
-    sortAsc = !sortAsc;
-  } else {
-    currentSortIndex = index;
-    sortAsc = true;
-  }
-  currentPage = 1;
   renderTable();
 }
 
@@ -356,4 +342,3 @@ loadCSV();
 </script>
 </body>
 </html>
-
