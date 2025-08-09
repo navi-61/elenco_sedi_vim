@@ -200,7 +200,7 @@ function populateFilters() {
 }
 
 
-function renderTable() {
+/*function renderTable() {
   tbody.innerHTML = '';
 
   const searchValue = document.getElementById('searchBox').value.toLowerCase().trim();
@@ -213,11 +213,12 @@ function renderTable() {
     const key = keys[currentSortIndex];
      // filtered.sort((a, b) => {
     //  filtered.sort((a, b) => a.citta.localeCompare(b.citta));
-    filtered.sort((a, b) => {
+    /* filtered.sort((a, b) => {
       const aCitta = (a.citta || '').toLowerCase();
       const bCitta = (b.citta || '').toLowerCase();
       return aCitta.localeCompare(bCitta);
     });
+    /*
       let valA = (a[key] || '').toLowerCase();
       let valB = (b[key] || '').toLowerCase();
       if (valA < valB) return sortAsc ? -1 : 1;
@@ -270,6 +271,87 @@ function renderTable() {
     tbody.appendChild(tr);
   }
 
+  renderPagination(totalPages);
+}*/
+
+  function renderTable() {
+  const tbody = document.querySelector('#dataTable tbody');
+  const searchValue = document.getElementById('searchBox').value.toLowerCase().trim();
+  const searchTerms = searchValue.split(/\s+/).filter(term => term); // separa in parole
+
+  // Filtra righe con i filtri e ricerca
+  let filtered = filterRows();
+
+  // Ordina per citta in modo sicuro
+  filtered.sort((a, b) => {
+    const aCitta = (a.citta || '').toLowerCase();
+    const bCitta = (b.citta || '').toLowerCase();
+    return aCitta.localeCompare(bCitta);
+  });
+
+  // Calcola pagine
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  if (currentPage > totalPages) currentPage = totalPages || 1;
+
+  // Sottoseleziona dati da mostrare in pagina
+  const start = (currentPage - 1) * pageSize;
+  const pageRows = filtered.slice(start, start + pageSize);
+
+  tbody.innerHTML = '';
+
+  if (pageRows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nessun risultato</td></tr>';
+    pagination.innerHTML = '';
+    return;
+  }
+
+  // Funzione per evidenziare testo ricercato
+  function highlightMatch(text, searchTerms) {
+    let result = escapeHtml(text || '');
+    searchTerms.forEach(term => {
+      if (term) {
+        const regex = new RegExp(`(${term})`, 'gi');
+        result = result.replace(regex, '<mark>$1</mark>');
+      }
+    });
+    return result;
+  }
+
+  // Render righe
+  for (const row of pageRows) {
+    const presidioUpper = (row.presidio || '').toUpperCase();
+    const tooltipEmail = emailMap[presidioUpper] || '';
+
+    const emailRaw = (row.email || '').trim();
+    let emailHtml = '';
+
+    if (emailRaw.includes('@')) {
+      emailHtml = highlightMatch(emailRaw, searchTerms);
+    } else if (!emailRaw && tooltipEmail) {
+      emailHtml = `<div class="tooltip">${highlightMatch(row.presidio, searchTerms)}
+                   <span class="tooltiptext">${escapeHtml(tooltipEmail)}</span></div>`;
+    } else if (emailMap[emailRaw.toUpperCase()]) {
+      emailHtml = `<div class="tooltip">${highlightMatch(emailRaw, searchTerms)}
+                   <span class="tooltiptext">${escapeHtml(emailMap[emailRaw.toUpperCase()])}</span></div>`;
+    } else {
+      emailHtml = highlightMatch(emailRaw, searchTerms);
+    }
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${highlightMatch(row.citta, searchTerms)}</td>
+      <td>${highlightMatch(row.indirizzo, searchTerms)}</td>
+      <td><div class="tooltip">${highlightMatch(row.servizio, searchTerms)}
+        <span class="tooltiptext">${escapeHtml(row.servizio)}</span></div></td>
+      <td>${emailHtml}</td>
+      <td>${highlightMatch(row.presidio, searchTerms)}</td>
+      <td><div class="tooltip">${highlightMatch(row.note, searchTerms)}
+        <span class="tooltiptext">${escapeHtml(row.note)}</span></div></td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  // Render paginazione
   renderPagination(totalPages);
 }
 
@@ -344,6 +426,7 @@ loadCSV();
 </script>
 </body>
 </html>
+
 
 
 
