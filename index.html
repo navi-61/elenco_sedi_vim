@@ -307,15 +307,5 @@ function toggleDarkMode() {
   document.body.classList.toggle('dark-mode');
 }
 
-// Event listeners
 document.getElementById('searchBox').addEventListener('input', () => { currentPage = 1; renderTable(); });
-document.getElementById('cityFilter').addEventListener('change', () => { currentPage = 1; renderTable(); });
-document.getElementById('serviceFilter').addEventListener('change', () => { currentPage = 1; renderTable(); });
-document.getElementById('presidioFilter').addEventListener('change', () => { currentPage = 1; renderTable(); });
-
-// Carica dati
-loadCSV();
-</script>
-</body>
-</html>
-
+document.get
