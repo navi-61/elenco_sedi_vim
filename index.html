@@ -24,7 +24,7 @@
   button, select { font-size: 12px; padding: 8px; }
   .pagination { margin-top: 10px; }
   .pagination button { margin-right: 5px; padding: 5px 10px; }
-  mark { background: yellow; color: black; }
+  mark, .highlight { background: yellow; color: black; }
 </style>
 </head>
 <body>
@@ -68,7 +68,6 @@ let currentSortIndex = null;
 const tbody = document.querySelector('#dataTable tbody');
 const pagination = document.getElementById('pagination');
 
-// Mappa email per presidio
 const emailMap = {
   'CARATE': 'sia.carate@asst-brianza.it',
   'VIMERCATE': 'sia.vimercate@asst-brianza.it',
@@ -76,7 +75,6 @@ const emailMap = {
   'IRCCS MONZA': 'riferire a fleet monza'
 };
 
-// Escape HTML
 function escapeHtml(str) {
   if (!str) return '';
   return String(str).replace(/&/g, '&amp;')
@@ -84,19 +82,17 @@ function escapeHtml(str) {
                     .replace(/>/g, '&gt;');
 }
 
-// Evidenzia testo
 function highlightMatch(text, searchTerms) {
-    let result = text;
-    searchTerms.forEach(term => {
-        if (term) {
-            const regex = new RegExp(`(${term})`, 'gi');
-            result = result.replace(regex, '<span class="highlight">$1</span>');
-        }
-    });
-    return result;
+  let result = text;
+  searchTerms.forEach(term => {
+    if (term) {
+      const regex = new RegExp(`(${term.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+      result = result.replace(regex, '<span class="highlight">$1</span>');
+    }
+  });
+  return result;
 }
 
-// Carica CSV
 async function loadCSV() {
   try {
     const response = await fetch('dati.csv');
@@ -110,7 +106,6 @@ async function loadCSV() {
   }
 }
 
-// Parsing CSV
 function parseCSV(text) {
   const lines = text.trim().split('\n');
   rows = lines.slice(1).map(line => {
@@ -126,7 +121,6 @@ function parseCSV(text) {
   });
 }
 
-// Popola filtri
 function populateFilters() {
   const cityFilter = document.getElementById('cityFilter');
   const serviceFilter = document.getElementById('serviceFilter');
@@ -140,19 +134,28 @@ function populateFilters() {
   const services = [...new Set(rows.map(r => r.servizio))].filter(Boolean).sort();
   const presidi = [...new Set(rows.map(r => r.presidio))].filter(Boolean).sort();
 
-  for (const list of [cities, services, presidi]) {
-    list.forEach(value => {
-      const option = document.createElement('option');
-      option.value = value;
-      option.textContent = value;
-      if (list === cities) cityFilter.appendChild(option);
-      else if (list === services) serviceFilter.appendChild(option);
-      else presidioFilter.appendChild(option);
-    });
-  }
+  cities.forEach(value => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = value;
+    cityFilter.appendChild(option);
+  });
+
+  services.forEach(value => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = value;
+    serviceFilter.appendChild(option);
+  });
+
+  presidi.forEach(value => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = value;
+    presidioFilter.appendChild(option);
+  });
 }
 
-// Filtra righe
 function filterRows() {
   const cityVal = document.getElementById('cityFilter').value;
   const serviceVal = document.getElementById('serviceFilter').value;
@@ -168,43 +171,33 @@ function filterRows() {
   });
 }
 
-// Render tabella
 function renderTable() {
-    const tbody = document.querySelector('#dataTable tbody');
-    tbody.innerHTML = '';
-    const searchValue = document.getElementById('searchBox').value.toLowerCase().trim();
-    const searchTerms = searchValue.split(/\s+/).filter(term => term); // separa in parole
+  tbody.innerHTML = '';
+  const searchValue = document.getElementById('searchBox').value.toLowerCase().trim();
+  const searchTerms = searchValue.split(/\s+/).filter(term => term);
 
-    const filteredData = filterRows(data).filter(row => {
-        return searchTerms.every(term =>
-            row.some(cell => cell.toLowerCase().includes(term))
-        );
-    });
+  let filtered = filterRows();
 
-    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-    document.getElementById('pageInfo').textContent = `Pagina ${currentPage} di ${totalPages || 1}`;
-
-    const start = (currentPage - 1) * rowsPerPage;
-    const pageData = filteredData.slice(start, start + rowsPerPage);
-
-    pageData.forEach(row => {
-        const tr = document.createElement('tr');
-        row.forEach(cell => {
-            const td = document.createElement('td');
-            td.innerHTML = highlightMatch(cell, searchTerms); // evidenzia multiparola
-            tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
+  // Ordinamento
+  if (currentSortIndex !== null) {
+    const keys = ['citta', 'indirizzo', 'servizio', 'email', 'presidio', 'note'];
+    const key = keys[currentSortIndex];
+    filtered.sort((a, b) => {
+      let valA = (a[key] || '').toLowerCase();
+      let valB = (b[key] || '').toLowerCase();
+      if(valA < valB) return sortAsc ? -1 : 1;
+      if(valA > valB) return sortAsc ? 1 : -1;
+      return 0;
     });
   }
 
   const totalPages = Math.ceil(filtered.length / pageSize);
-  if(currentPage > totalPages) currentPage = totalPages || 1;
+  if (currentPage > totalPages) currentPage = totalPages || 1;
 
-  const pageRows = filtered.slice((currentPage -1)*pageSize, currentPage*pageSize);
-  tbody.innerHTML = '';
+  const start = (currentPage - 1) * pageSize;
+  const pageRows = filtered.slice(start, start + pageSize);
 
-  if(pageRows.length === 0) {
+  if (pageRows.length === 0) {
     tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nessun risultato</td></tr>';
     pagination.innerHTML = '';
     return;
@@ -213,32 +206,26 @@ function renderTable() {
   for (const row of pageRows) {
     const presidioUpper = row.presidio.toUpperCase();
     const tooltipEmail = emailMap[presidioUpper] || '';
-
     const emailRaw = row.email.trim();
     let emailHtml = '';
 
     if (emailRaw.includes('@')) {
-      emailHtml = highlightMatch(escapeHtml(emailRaw), searchTerm);
+      emailHtml = highlightMatch(escapeHtml(emailRaw), searchTerms);
     } else if (!emailRaw && tooltipEmail) {
-      emailHtml = `<div class="tooltip">${highlightMatch(escapeHtml(row.presidio || ''), searchTerm)}
-                    <span class="tooltiptext">${escapeHtml(tooltipEmail)}</span></div>`;
-    } else if (emailMap[emailRaw.toUpperCase()]) {
-      emailHtml = `<div class="tooltip">${highlightMatch(escapeHtml(emailRaw || ''), searchTerm)}
-                    <span class="tooltiptext">${escapeHtml(emailMap[emailRaw.toUpperCase()])}</span></div>`;
+      emailHtml = `<div class="tooltip">${highlightMatch(escapeHtml(row.presidio || ''), searchTerms)}
+        <span class="tooltiptext">${escapeHtml(tooltipEmail)}</span></div>`;
     } else {
-      emailHtml = highlightMatch(escapeHtml(emailRaw), searchTerm);
+      emailHtml = highlightMatch(escapeHtml(emailRaw), searchTerms);
     }
 
     let tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${highlightMatch(escapeHtml(row.citta || ''), searchTerm)}</td>
-      <td>${highlightMatch(escapeHtml(row.indirizzo || ''), searchTerm)}</td>
-      <td><div class="tooltip">${highlightMatch(escapeHtml(row.servizio || ''), searchTerm)}
-        <span class="tooltiptext">${escapeHtml(row.servizio || '')}</span></div></td>
+      <td>${highlightMatch(escapeHtml(row.citta || ''), searchTerms)}</td>
+      <td>${highlightMatch(escapeHtml(row.indirizzo || ''), searchTerms)}</td>
+      <td>${highlightMatch(escapeHtml(row.servizio || ''), searchTerms)}</td>
       <td>${emailHtml}</td>
-      <td>${highlightMatch(escapeHtml(row.presidio || ''), searchTerm)}</td>
-      <td><div class="tooltip">${highlightMatch(escapeHtml(row.note || ''), searchTerm)}
-        <span class="tooltiptext">${escapeHtml(row.note || '')}</span></div></td>
+      <td>${highlightMatch(escapeHtml(row.presidio || ''), searchTerms)}</td>
+      <td>${highlightMatch(escapeHtml(row.note || ''), searchTerms)}</td>
     `;
     tbody.appendChild(tr);
   }
@@ -314,9 +301,8 @@ document.getElementById('cityFilter').addEventListener('change', () => { current
 document.getElementById('serviceFilter').addEventListener('change', () => { currentPage = 1; renderTable(); });
 document.getElementById('presidioFilter').addEventListener('change', () => { currentPage = 1; renderTable(); });
 
-// Carica dati
+// Avvio caricamento dati
 loadCSV();
 </script>
 </body>
 </html>
-
