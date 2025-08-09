@@ -173,20 +173,20 @@ function filterRows() {
 
 function renderTable() {
   tbody.innerHTML = '';
+
   const searchValue = document.getElementById('searchBox').value.toLowerCase().trim();
   const searchTerms = searchValue.split(/\s+/).filter(term => term);
 
   let filtered = filterRows();
 
-  // Ordinamento
   if (currentSortIndex !== null) {
     const keys = ['citta', 'indirizzo', 'servizio', 'email', 'presidio', 'note'];
     const key = keys[currentSortIndex];
     filtered.sort((a, b) => {
       let valA = (a[key] || '').toLowerCase();
       let valB = (b[key] || '').toLowerCase();
-      if(valA < valB) return sortAsc ? -1 : 1;
-      if(valA > valB) return sortAsc ? 1 : -1;
+      if (valA < valB) return sortAsc ? -1 : 1;
+      if (valA > valB) return sortAsc ? 1 : -1;
       return 0;
     });
   }
@@ -221,20 +221,16 @@ function renderTable() {
       emailHtml = highlightMatch(escapeHtml(emailRaw), searchTerms);
     }
 
-    let tr = document.createElement('tr');
+    const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${highlightMatch(escapeHtml(row.citta || ''), searchTerms)}</td>
       <td>${highlightMatch(escapeHtml(row.indirizzo || ''), searchTerms)}</td>
-      <td><div class="tooltip">
-        ${highlightMatch(escapeHtml(row.servizio || ''), searchTerms)}
-        <span class="tooltiptext">${escapeHtml(row.servizio || '')}</span>
-      </div></td>
+      <td><div class="tooltip">${highlightMatch(escapeHtml(row.servizio || ''), searchTerms)}
+        <span class="tooltiptext">${escapeHtml(row.servizio || '')}</span></div></td>
       <td>${emailHtml}</td>
       <td>${highlightMatch(escapeHtml(row.presidio || ''), searchTerms)}</td>
-      <td><div class="tooltip">
-        ${highlightMatch(escapeHtml(row.note || ''), searchTerms)}
-        <span class="tooltiptext">${escapeHtml(row.note || '')}</span>
-      </div></td>
+      <td><div class="tooltip">${highlightMatch(escapeHtml(row.note || ''), searchTerms)}
+        <span class="tooltiptext">${escapeHtml(row.note || '')}</span></div></td>
     `;
     tbody.appendChild(tr);
   }
