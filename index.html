@@ -212,8 +212,12 @@ function renderTable() {
     if (emailRaw.includes('@')) {
       emailHtml = highlightMatch(escapeHtml(emailRaw), searchTerms);
     } else if (!emailRaw && tooltipEmail) {
-      emailHtml = `<div class="tooltip">${highlightMatch(escapeHtml(row.presidio || ''), searchTerms)}
+      // Tooltip con testo semplice senza highlight per non rompere hover
+      emailHtml = `<div class="tooltip">${escapeHtml(row.presidio || '')}
         <span class="tooltiptext">${escapeHtml(tooltipEmail)}</span></div>`;
+    } else if (emailMap[emailRaw.toUpperCase()]) {
+      emailHtml = `<div class="tooltip">${escapeHtml(emailRaw || '')}
+        <span class="tooltiptext">${escapeHtml(emailMap[emailRaw.toUpperCase()])}</span></div>`;
     } else {
       emailHtml = highlightMatch(escapeHtml(emailRaw), searchTerms);
     }
@@ -301,7 +305,7 @@ document.getElementById('cityFilter').addEventListener('change', () => { current
 document.getElementById('serviceFilter').addEventListener('change', () => { currentPage = 1; renderTable(); });
 document.getElementById('presidioFilter').addEventListener('change', () => { currentPage = 1; renderTable(); });
 
-// Avvio caricamento dati
+// Carica dati
 loadCSV();
 </script>
 </body>
